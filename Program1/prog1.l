@@ -1,6 +1,7 @@
 %option noyywrap
 %{
     #include <stdio.h>
+    #include <stdlib.h>
     // int no_of_lines = 0;
     // int no_of_chars = 0;
     int yylval;
@@ -32,8 +33,8 @@ if		{ printf("IF"); return IF; }
 else 	{ printf("ELSE"); return ELSE; }
 int     { printf("INT"); return INT; }
 main    { printf("MAIN"); return MAIN; }
-{id}	{ printf("ID \"%s\"", yytext); return ID; }
-{number}	{ printf("NUM \"%s\"", yytext); return NUM; }
+{id}	{ printf("ID(%s)", yytext); return ID; }
+{number}	{ printf("NUM(%s)", yytext); return NUM; }
 "="		{ printf("ASSIGN"); return ASSIGN; }
 "<"		{ printf("LT"); return LT; }
 "<="	{ printf("LE"); return LE; }
@@ -49,40 +50,33 @@ main    { printf("MAIN"); return MAIN; }
 ">>"    { printf("SHR"); return SHR; }
 {str}   { printf("DIV"); return DIV; }
 {wrap}  { printf("\n"); }
-{punctuation} { printf("PUNCT \"%s\"", yytext); return yytext[0];}
+{punctuation} { printf("PUNCT('%s')", yytext); return yytext[0];}
 
 
 %%
 
-/*
-{id}	{ yylval = (int) installID(); return (ID); }
-{number}	{ yylval = (int) installNum(); return (NUMBER); }
-"="		{ return(ASSIGN); }
-"<"		{ yylval = LT; return(RELOP); }
-"<="	{ yylval = LE; return(RELOP); }
-"=="	{ yylval = EQ; return(RELOP); }
-"<>"	{ yylval = NE; return(RELOP); }
-">"		{ yylval = GT; return(RELOP); }
-">="	{ yylval = GE; return(RELOP); }
-*/
-/* int yywrap(){} */
 int main(int argc, char **argv)
 {
     int tok;
-    /* FILE *fp;
-    char filename[50];
-    printf("Enter the filename: \n");
-    scanf("%s",filename);
-    fp = fopen(filename,"r");
-    yyin = fp;
+    FILE *fp;
+    if (argc > 2) {
+        printf("Error: Too many arguments.\n");
+        printf("Usage: ./prog1 input_file\n");
+        return EXIT_FAILURE;
+    }
+    if (argc == 2) {
+        fp = fopen(argv[1],"r");
+        if (!fp) {
+            printf("Failed to open input file.\n");
+            return EXIT_FAILURE;
+        }
+        yyin = fp;
+    }
 
-    printf("if = %d\n", IF); */
     while( (tok = yylex()) ){
         printf(" ");
     }
-    /* printf("\nnumber of lines = %d, number of chars = %d\n",
-        no_of_lines, no_of_chars ); */
-
-    /* fclose(fp); */
+    if (argc == 2)
+        fclose(fp);
     return 0;
 }
