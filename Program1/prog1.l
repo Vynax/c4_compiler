@@ -45,10 +45,10 @@ main    { printf("MAIN"); return MAIN; }
 "+"     { printf("ADD"); return ADD; }
 "-"     { printf("SUB"); return SUB; }
 "*"     { printf("MUL"); return MUL; }
-"/"     { printf("ADD"); return ADD; }
+"/"     { printf("DIV"); return DIV; }
 "<<"    { printf("SHL"); return SHL; }
 ">>"    { printf("SHR"); return SHR; }
-{str}   { printf("DIV"); return DIV; }
+{str}   { printf("STR"); return STR; }
 {wrap}  { printf("\n"); }
 {punctuation} { printf("PUNCT('%s')", yytext); return yytext[0];}
 
